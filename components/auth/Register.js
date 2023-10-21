@@ -15,6 +15,7 @@ export class Register extends Component {
 
 
 
+
   render() {
     return (
       <View>
