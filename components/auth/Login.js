@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, TextInput, Button, StyleSheet, Text, Image } from "react-native";
-import { getAuth, signInWithEmailAndPassword} from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 export class Login extends Component {
   constructor(props) {

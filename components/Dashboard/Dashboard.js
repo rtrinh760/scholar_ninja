@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, ScrollView, Modal, Button } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, ScrollView, Modal, Button } from "react-native";
 const scholarships = [
   { id: 1, title: "Scholarship 1" },
   { id: 2, title: "Scholarship 2" },
@@ -17,13 +15,18 @@ const Dashboard = ({ navigation }) => {
     setModalVisible(!isModalVisible);
   };
 
+  const goToProfile = () => {
+    
+    navigation.navigate("Profile");
+  };
+
   const searchScholarships = () => {
 
   };
 
   const scrapeScholarshipWebsite = () => {
-
-    toggleModal();
+    
+    toggleModal(); 
   };
 
   return (
