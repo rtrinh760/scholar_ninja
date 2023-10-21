@@ -1,12 +1,60 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Modal, Button } from "react-native";
+import OpenAI from "openai";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  Modal,
+  Button,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import ScrapingBeeClient from "scrapingbee";
+
 const scholarships = [
   { id: 1, title: "Scholarship 1" },
   { id: 2, title: "Scholarship 2" },
   { id: 3, title: "Scholarship 3" },
-  
 ];
+
+async function get(url) {
+  var client = new ScrapingBeeClient(
+    process.env.SCRAPINGBEE_API_KEY
+  );
+  var response = await client.get({
+    url: url,
+  });
+  return response;
+}
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+async function sendMessage(dataScrapedText) {
+  const prompt =
+    "You are a JSON expert who understands how to format data-scraped information into neat JSON objects. You are helping a student who is looking for scholarships. The student has provided you with a link of a scholarship website. You need format the information into a JSON object with the scholarship information. Include fields such as name, description, and date.";
+
+  // https://platform.openai.com/docs/api-reference/chat/create
+  const completionOutput = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      { role: "system", content: prompt },
+      { role: "user", content: `${dataScrapedText}` },
+    ],
+    temperature: 0.5,
+    frequency_penalty: 0.5,
+  });
+
+  const completionResponse =
+    completionOutput.data.choices[0].message?.content.trim() ||
+    "Error occurred. Please try again.";
+
+  res.setHeader("Content-Type", "application/json");
+  res.end(JSON.stringify({ text: completionResponse }));
+}
 
 const Dashboard = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -20,28 +68,18 @@ const Dashboard = ({ navigation }) => {
     navigation.navigate("Profile");
   };
 
-  const searchScholarships = () => {
-  
-  };
+  const searchScholarships = () => {};
 
   const scrapeScholarshipWebsite = () => {
-    fetch('http://172.20.10.4:5000/scholarships', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json', // adb reverse tcp:5000 tcp:5000 
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ "url": url })
-    })
-    .then(response => {
-      console.log("test")
-      console.log(response)
-      console.log(response.json())
-      return response.json();
-    })
-    .then(response => console.log(JSON.stringify(response)))
-    .then(toggleModal)
-    .catch(error => console.error('Error:', error));
+    get(url)
+      .then((response) => {
+        const decoder = new TextDecoder();
+        const text = decoder.decode(response.data);
+        console.log(text);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -49,7 +87,13 @@ const Dashboard = ({ navigation }) => {
       <View style={styles.header}>
         <Text style={styles.title}>Scholarship Dashboard</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-          <Icon name="user" size={30} color="white" style={styles.profileIcon} onPress={()=> navigation.navigate("ProfileMenu")} />
+          <Icon
+            name="user"
+            size={30}
+            color="white"
+            style={styles.profileIcon}
+            onPress={() => navigation.navigate("ProfileMenu")}
+          />
         </TouchableOpacity>
       </View>
 
@@ -62,7 +106,11 @@ const Dashboard = ({ navigation }) => {
       <ScrollView style={styles.scholarshipList}>
         <Text style={styles.listTitle}>Available Scholarships</Text>
         {scholarships.map((item) => (
-          <TouchableOpacity style={styles.scholarshipItem} key={item.id} onPress={()=> {}}>
+          <TouchableOpacity
+            style={styles.scholarshipItem}
+            key={item.id}
+            onPress={() => {}}
+          >
             <Text style={styles.scholarshipTitle}>{item.title}</Text>
           </TouchableOpacity>
         ))}
