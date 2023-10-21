@@ -17,17 +17,31 @@ const Dashboard = ({ navigation }) => {
   };
 
   const goToProfile = () => {
-    
     navigation.navigate("Profile");
   };
 
   const searchScholarships = () => {
-
+  
   };
 
   const scrapeScholarshipWebsite = () => {
-    
-    toggleModal(); 
+    fetch('http://172.20.10.4:5000/scholarships', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json', // adb reverse tcp:5000 tcp:5000 
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "url": url })
+    })
+    .then(response => {
+      console.log("test")
+      console.log(response)
+      console.log(response.json())
+      return response.json();
+    })
+    .then(response => console.log(JSON.stringify(response)))
+    .then(toggleModal)
+    .catch(error => console.error('Error:', error));
   };
 
   return (
