@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Landing from './components/auth/Landing'
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
+import Profile from './components/Dashboard/ProfileMenu'
 
 import { getAuth } from "firebase/auth";
 // Import the functions you need from the SDKs you need
@@ -69,7 +70,7 @@ export class App extends Component {
   
         return (
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Landing">
+            <Stack.Navigator initialRouteName="Dashboard">
               <Stack.Screen
                 name="Landing"
                 component={Landing}
@@ -90,6 +91,7 @@ export class App extends Component {
                 component={Dashboard}
                 options={{ headerShown: false }}
               ></Stack.Screen>
+              <Stack.Screen name='ProfileMenu' component={Profile} options={{headerShown: false}} />
             </Stack.Navigator>
           </NavigationContainer>
         );
