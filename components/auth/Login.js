@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, TextInput, Button, StyleSheet, Text, Image } from "react-native";
+import { getAuth, signInWithEmailAndPassword} from 'firebase/auth'
 
 export class Login extends Component {
   constructor(props) {
@@ -26,6 +27,12 @@ export class Login extends Component {
 
         console.log(error);
       });
+
+      auth.onAuthStateChanged((user) => {
+        if(user){
+          this.props.navigation.navigate('Dashboard');
+        }
+      })
   }
 
   render() {
