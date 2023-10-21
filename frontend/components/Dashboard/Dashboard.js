@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, ScrollView, Modal, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Modal, Button } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 const scholarships = [
   { id: 1, title: "Scholarship 1" },
   { id: 2, title: "Scholarship 2" },
