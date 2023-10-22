@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 // import OpenAI from "openai";
 import {
   View,
@@ -13,7 +13,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { ScrapingBeeClient } from "scrapingbee";
 
-const scholarships = [
+const scholarships1 = [
   { id: 1, title: "Vannessa A. Gonzalez Memorial Scholarship" },
   { id: 2, title: "Servant Ships Scholarship" },
   { id: 3, title: "Bright Lights Scholarship" },
@@ -24,10 +24,6 @@ const scholarships2 = [
   { id: 5, title: "Carla M. Champagne Memorial Scholarship" },
   { id: 6, title: "Kyle Lam Hacker Scholarship" },
 ];
-
-useEffect(() => {
-  scrapeScholarshipWebsite();
-}, [scholarships]);
 
 async function get(url) {
   const scrapingBeeClient = new ScrapingBeeClient(
@@ -72,6 +68,7 @@ async function get(url) {
 const Dashboard = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [url, setUrl] = useState("");
+  const [scholarships, setScholarships] = useState(scholarships1);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -84,18 +81,18 @@ const Dashboard = ({ navigation }) => {
   const searchScholarships = () => {};
 
   const scrapeScholarshipWebsite = async () => {
-    scholarships = {...scholarships2}
+    setScholarships(scholarships2);
 
-    // get(url)
-    //   .then((response) => {
-    //     console.log(response)
-    //     const decoder = new TextDecoder();
-    //     const text = decoder.decode(response.data);
-    //     console.log(text);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    get(url)
+      .then((response) => {
+        console.log(response)
+        const decoder = new TextDecoder();
+        const text = decoder.decode(response.data);
+        console.log(text);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
