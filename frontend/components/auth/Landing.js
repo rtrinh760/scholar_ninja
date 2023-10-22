@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { Image, View, Text, StyleSheet } from "react-native";
 import * as Animatable from "react-native-animatable";
 
 const LandingPage = ({ navigation }) => {

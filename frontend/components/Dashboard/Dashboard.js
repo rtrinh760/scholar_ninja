@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import OpenAI from "openai";
+import React, { useEffect, useState } from "react";
+// import OpenAI from "openai";
 import {
   View,
   Text,
@@ -11,50 +11,63 @@ import {
   Button,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import ScrapingBeeClient from "scrapingbee";
+import { ScrapingBeeClient } from "scrapingbee";
 
 const scholarships = [
-  { id: 1, title: "Scholarship 1" },
-  { id: 2, title: "Scholarship 2" },
-  { id: 3, title: "Scholarship 3" },
+  { id: 1, title: "Vannessa A. Gonzalez Memorial Scholarship" },
+  { id: 2, title: "Servant Ships Scholarship" },
+  { id: 3, title: "Bright Lights Scholarship" },
 ];
 
+const scholarships2 = [
+  { id: 4, title: "Grand Oaks Enterprises LLC Scholarship" },
+  { id: 5, title: "Carla M. Champagne Memorial Scholarship" },
+  { id: 6, title: "Kyle Lam Hacker Scholarship" },
+];
+
+useEffect(() => {
+  scrapeScholarshipWebsite();
+}, [scholarships]);
+
 async function get(url) {
-  var client = new ScrapingBeeClient(
-    process.env.SCRAPINGBEE_API_KEY
+  const scrapingBeeClient = new ScrapingBeeClient(
+    "W9M3DRSN277PWESEA9FG87NA7DDHAAQ3NR6RTB444C11IXY3XDK142VVOSFA8IX04SZKW51CKJT4CNRY"
   );
-  var response = await client.get({
+  const response = await scrapingBeeClient.get({
     url: url,
+    params: {
+      render_js: "true",
+    },
   });
   return response;
 }
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// const openai = new OpenAI({
+//   apiKey: process.env.OPENAI_API_KEY,
+// });
 
-async function sendMessage(dataScrapedText) {
-  const prompt =
-    "You are a JSON expert who understands how to format data-scraped information into neat JSON objects. You are helping a student who is looking for scholarships. The student has provided you with a link of a scholarship website. You need format the information into a JSON object with the scholarship information. Include fields such as name, description, and date.";
+// async function sendMessage(dataScrapedText) {
+//   const prompt =
+//     "You are a JSON expert who understands how to format data-scraped information into neat JSON objects. You are helping a student who is looking for scholarships. The student has provided you with a link of a scholarship website. You need format the information into a JSON object with the scholarship information. Include fields such as name, description, and date.";
 
-  // https://platform.openai.com/docs/api-reference/chat/create
-  const completionOutput = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      { role: "system", content: prompt },
-      { role: "user", content: `${dataScrapedText}` },
-    ],
-    temperature: 0.5,
-    frequency_penalty: 0.5,
-  });
+//   // https://platform.openai.com/docs/api-reference/chat/create
+//   const completionOutput = await openai.createChatCompletion({
+//     model: "gpt-3.5-turbo",
+//     messages: [
+//       { role: "system", content: prompt },
+//       { role: "user", content: `${dataScrapedText}` },
+//     ],
+//     temperature: 0.5,
+//     frequency_penalty: 0.5,
+//   });
 
-  const completionResponse =
-    completionOutput.data.choices[0].message?.content.trim() ||
-    "Error occurred. Please try again.";
+//   const completionResponse =
+//     completionOutput.data.choices[0].message?.content.trim() ||
+//     "Error occurred. Please try again.";
 
-  res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify({ text: completionResponse }));
-}
+//   res.setHeader("Content-Type", "application/json");
+//   res.end(JSON.stringify({ text: completionResponse }));
+// }
 
 const Dashboard = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -70,16 +83,19 @@ const Dashboard = ({ navigation }) => {
 
   const searchScholarships = () => {};
 
-  const scrapeScholarshipWebsite = () => {
-    get(url)
-      .then((response) => {
-        const decoder = new TextDecoder();
-        const text = decoder.decode(response.data);
-        console.log(text);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const scrapeScholarshipWebsite = async () => {
+    scholarships = {...scholarships2}
+
+    // get(url)
+    //   .then((response) => {
+    //     console.log(response)
+    //     const decoder = new TextDecoder();
+    //     const text = decoder.decode(response.data);
+    //     console.log(text);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   return (
