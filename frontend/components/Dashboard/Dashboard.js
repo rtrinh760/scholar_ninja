@@ -1,16 +1,9 @@
 import React, { useState } from "react";
 // import OpenAI from "openai";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Modal,
-  Button,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Modal, Button, FlatList } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
+import * as Animatable from "react-native-animatable";
 import { ScrapingBeeClient } from "scrapingbee";
 
 const scholarships1 = [
@@ -65,22 +58,41 @@ async function get(url) {
 //   res.end(JSON.stringify({ text: completionResponse }));
 // }
 
-const Dashboard = ({ navigation }) => {
+const ScholarshipCard = ({ scholarship, onPress }) => (
+  <Animatable.View animation="fadeInUp" duration={1000} style={styles.scholarshipCard}>
+    <TouchableOpacity onPress={onPress}>
+      <Text style={styles.scholarshipTitle}>{scholarship.title}</Text>
+      <Text style={styles.scholarshipDescription}>{scholarship.description}</Text>
+    </TouchableOpacity>
+  </Animatable.View>
+);
+
+const Dashboard = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [url, setUrl] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const navigation = useNavigation();
   const [scholarships, setScholarships] = useState(scholarships1);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+
   };
 
-  const goToProfile = () => {
-    navigation.navigate("Profile");
+  const navigateToScholarshipDetails = (scholarship) => {
+    navigation.navigate("ScholarshipDetails", { scholarship });
   };
 
-  const searchScholarships = () => {};
+  const searchScholarships = (text) => {
+    setSearchText(text);
+  };
 
-  const scrapeScholarshipWebsite = async () => {
+  const filteredScholarships = scholarships.filter((scholarship) =>
+    scholarship.title.toLowerCase().includes(searchText.toLowerCase()) ||
+    scholarship.description.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const scrapeScholarshipWebsite = () => {
     setScholarships(scholarships2);
 
     get(url)
@@ -93,20 +105,17 @@ const Dashboard = ({ navigation }) => {
       .catch((error) => {
         console.log(error);
       });
+      
+    toggleModal();
+    
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Scholarship Dashboard</Text>
+        <Text style={styles.title}>Dashboard</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-          <Icon
-            name="user"
-            size={30}
-            color="white"
-            style={styles.profileIcon}
-            onPress={() => navigation.navigate("ProfileMenu")}
-          />
+          <Icon name="bars" size={30} color="white" style={styles.profileIcon} onPress={() => navigation.navigate("ProfileMenu")} />
         </TouchableOpacity>
       </View>
 
@@ -114,20 +123,17 @@ const Dashboard = ({ navigation }) => {
         style={styles.searchInput}
         placeholder="Search Scholarships"
         onChangeText={searchScholarships}
+        value={searchText} 
       />
 
-      <ScrollView style={styles.scholarshipList}>
-        <Text style={styles.listTitle}>Available Scholarships</Text>
-        {scholarships.map((item) => (
-          <TouchableOpacity
-            style={styles.scholarshipItem}
-            key={item.id}
-            onPress={() => {}}
-          >
-            <Text style={styles.scholarshipTitle}>{item.title}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+
+      <FlatList
+        data={filteredScholarships}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <ScholarshipCard scholarship={item} onPress={() => navigateToScholarshipDetails(item)} />
+        )}
+      />
 
       <View style={styles.menu}>
         <TouchableOpacity onPress={toggleModal} style={styles.addButton}>
@@ -136,17 +142,30 @@ const Dashboard = ({ navigation }) => {
       </View>
 
       <Modal animationType="slide" transparent={true} visible={isModalVisible}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Enter Website URL to Scrape</Text>
-          <TextInput
-            style={styles.modalInput}
-            placeholder="Website URL"
-            onChangeText={(text) => setUrl(text)}
-          />
-          <Button title="Scrape" onPress={scrapeScholarshipWebsite} />
-          <Button title="Close" onPress={toggleModal} />
-        </View>
-      </Modal>
+  <View style={styles.modalContainer}>
+  <Image style={styles.logo} source={require('../../assets/logo.png')} />
+    <Text style={styles.modalTitle}>Enter Website URL to Scrape</Text>
+    <TextInput
+      style={styles.modalInput}
+      placeholder="Website URL"
+      onChangeText={(text) => setUrl(text)}
+    />
+    <View style={styles.modalButtonContainer}>
+      <TouchableOpacity
+        style={styles.modalButton1}
+        onPress={scrapeScholarshipWebsite}
+      >
+        <Text style={styles.modalButtonText2}>Scrape</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.modalButton2}
+        onPress={toggleModal}
+      >
+        <Text style={styles.modalButtonText1}>Close</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
     </View>
   );
 };
@@ -157,8 +176,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
   },
   header: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#215D9D",
     padding: 20,
+    paddingTop: 30,
+    borderBottomLeftRadius: 30,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -171,6 +192,12 @@ const styles = StyleSheet.create({
   profileIcon: {
     marginLeft: 10,
   },
+  logo: {
+    width: 150,
+    height: 150,
+    position: 'absolute',
+    top: '15%'
+  },
   searchInput: {
     backgroundColor: "white",
     padding: 10,
@@ -181,22 +208,24 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
   },
-  scholarshipList: {
+  scholarshipCard: {
     backgroundColor: "white",
     padding: 20,
-    flex: 1,
-  },
-  listTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  scholarshipItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#E0E0E0",
-    padding: 20,
+    borderRadius: 10,
+    margin: 10,
   },
   scholarshipTitle: {
     fontSize: 18,
+    fontWeight: "bold",
+  },
+  scholarshipDescription: {
+    fontSize: 40,
+  },
+
+  scholarshipDescription: {
+    fontSize: 16,
+    color: "#555",
+    marginTop: 10,
   },
   menu: {
     position: "absolute",
@@ -204,7 +233,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   addButton: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#215D9D",
     width: 50,
     height: 50,
     borderRadius: 25,
@@ -213,7 +242,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     backgroundColor: "white",
     padding: 20,
@@ -222,6 +251,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+
   },
   modalInput: {
     backgroundColor: "#F0F0F0",
@@ -230,6 +260,70 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E0E0E0",
     marginBottom: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "#F0F0F0", 
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#215D9D",
+    marginBottom: 10,
+  },
+  modalInput: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    marginVertical: 10,
+    width: "100%",
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  modalButton1: {
+    backgroundColor: "#215D9D",
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "white",
+    width: "45%",
+    alignItems: "center",
+  },
+  modalButton2: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#215D9D",
+    width: "45%",
+    alignItems: "center",
+  },
+  modalButtonText1: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#215D9D", 
+  },
+  modalButtonText2: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "white", 
+  },
+  modalButton1: {
+    backgroundColor: "#215D9D",
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "white",
+    width: "45%",
+    alignItems: "center",
   },
 });
 
