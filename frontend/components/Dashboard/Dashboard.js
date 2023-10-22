@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 // import OpenAI from "openai";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Modal, Button, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  Modal,
+  Button,
+  FlatList,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
@@ -19,54 +29,110 @@ async function get(url) {
   return response;
 }
 
-// const openai = new OpenAI({
-//   apiKey: process.env.OPENAI_API_KEY,
-// });
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
-// async function sendMessage(dataScrapedText) {
-//   const prompt =
-//     "You are a JSON expert who understands how to format data-scraped information into neat JSON objects. You are helping a student who is looking for scholarships. The student has provided you with a link of a scholarship website. You need format the information into a JSON object with the scholarship information. Include fields such as name, description, and date.";
+async function sendMessage(dataScrapedText) {
+  const prompt = `You are a JSON expert who understands how to format data-scraped information into neat JSON objects. 
+  You are helping a student who is looking for scholarships. The student has provided you with a link of a scholarship website. 
+  You need format the information into a JSON object with the scholarship information. Include fields such as name, description, and date.`;
 
-//   // https://platform.openai.com/docs/api-reference/chat/create
-//   const completionOutput = await openai.createChatCompletion({
-//     model: "gpt-3.5-turbo",
-//     messages: [
-//       { role: "system", content: prompt },
-//       { role: "user", content: `${dataScrapedText}` },
-//     ],
-//     temperature: 0.5,
-//     frequency_penalty: 0.5,
-//   });
+  // https://platform.openai.com/docs/api-reference/chat/create
+  const completionOutput = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      { role: "system", content: prompt },
+      { role: "user", content: `${dataScrapedText}` },
+    ],
+    temperature: 0.5,
+    frequency_penalty: 0.5,
+  });
 
-//   const completionResponse =
-//     completionOutput.data.choices[0].message?.content.trim() ||
-//     "Error occurred. Please try again.";
+  const completionResponse =
+    completionOutput.data.choices[0].message?.content.trim() ||
+    "Error occurred. Please try again.";
 
-//   res.setHeader("Content-Type", "application/json");
-//   res.end(JSON.stringify({ text: completionResponse }));
-// }
+  res.setHeader("Content-Type", "application/json");
+  res.end(JSON.stringify({ text: completionResponse }));
+}
 
 const ScholarshipCard = ({ scholarship, onPress }) => (
-  <Animatable.View animation="fadeInUp" duration={1000} style={styles.scholarshipCard}>
+  <Animatable.View
+    animation="fadeInUp"
+    duration={1000}
+    style={styles.scholarshipCard}
+  >
     <TouchableOpacity onPress={onPress}>
       <Text style={styles.scholarshipTitle}>{scholarship.title}</Text>
-      <Text style={styles.scholarshipDescription}>{scholarship.description}</Text>
+      <Text style={styles.scholarshipDescription}>
+        {scholarship.description}
+      </Text>
+      <Text style={styles.scholarshipTotal}>{scholarship.total}</Text>
     </TouchableOpacity>
   </Animatable.View>
 );
 
 const scholarships1 = [
-  { id: 1, title: "Vannessa A. Gonzalez Memorial Scholarship", description: "This scholarship seeks to honor the life of Vannessa A. Gonzalez by supporting students who share her passion for cosmetology." },
-  { id: 2, title: "Servant Ships Scholarship", description: "This scholarship seeks to support students who love to learn and are committed to pursuing higher education." },
-  { id: 3, title: "Bright Lights Scholarship", description: "This scholarship aims to support students who have had to overcome obstacles in order to pursue a college education. " },
-  { id: 4, title: "Eden Alaine Memorial Scholarship", description: "This scholarship seeks to support students who have lost close family members and fought to continue pursuing their goals." },
+  {
+    id: 1,
+    title: "Vannessa A. Gonzalez Memorial Scholarship",
+    description:
+      "This scholarship seeks to honor the life of Vannessa A. Gonzalez by supporting students who share her passion for cosmetology.",
+    total: "Amount: $2,000",
+  },
+  {
+    id: 2,
+    title: "Servant Ships Scholarship",
+    description:
+      "This scholarship seeks to support students who love to learn and are committed to pursuing higher education.",
+    total: "Amount: $1,000",
+  },
+  {
+    id: 3,
+    title: "Bright Lights Scholarship",
+    description:
+      "This scholarship aims to support students who have had to overcome obstacles in order to pursue a college education.",
+    total: "Amount: $1,100",
+  },
+  {
+    id: 4,
+    title: "Eden Alaine Memorial Scholarship",
+    description:
+      "This scholarship seeks to support students who have lost close family members and fought to continue pursuing their goals.",
+    total: "Amount: $1,000",
+  },
 ];
 
 const scholarships2 = [
-  { id: 5, title: "Grand Oaks Enterprises LLC Scholarship", description: "This scholarship seeks to help students who need financial assistance in order to pursue their dreams of higher education." },
-  { id: 6, title: "Carla M. Champagne Memorial Scholarship", description: "This scholarship seeks to honor the memory of Carla M. Champagne by supporting students who are passionate about volunteering and need help with their college expenses. " },
-  { id: 7, title: "Kyle Lam Hacker Scholarship", description: "This scholarship seeks to honor the memory of Kyle Lam by supporting students at his alma mater who exemplify the curiosity, experimentation, and execution that Kyle lived by." },
-  { id: 8, title: "Pamela Branchini Memorial Scholarship", description: "This scholarship seeks to honor the life of Pamela Branchini by supporting students who are pursuing degrees in the fine arts." },
+  {
+    id: 5,
+    title: "Grand Oaks Enterprises LLC Scholarship",
+    description:
+      "This scholarship seeks to help students who need financial assistance in order to pursue their dreams of higher education.",
+    total: "Amount: $1,000",
+  },
+  {
+    id: 6,
+    title: "Carla M. Champagne Memorial Scholarship",
+    description:
+      "This scholarship seeks to honor the memory of Carla M. Champagne by supporting students who are passionate about volunteering and need help with their college expenses.",
+    total: "Amount: $2,000",
+  },
+  {
+    id: 7,
+    title: "Kyle Lam Hacker Scholarship",
+    description:
+      "This scholarship seeks to honor the memory of Kyle Lam by supporting students at his alma mater who exemplify the curiosity, experimentation, and execution that Kyle lived by.",
+    total: "Amount: $5,000",
+  },
+  {
+    id: 8,
+    title: "Pamela Branchini Memorial Scholarship",
+    description:
+      "This scholarship seeks to honor the life of Pamela Branchini by supporting students who are pursuing degrees in the fine arts.",
+    total: "Amount: $2,000",
+  },
 ];
 
 const Dashboard = () => {
@@ -78,7 +144,6 @@ const Dashboard = () => {
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
-
   };
 
   const navigateToScholarshipDetails = (scholarship) => {
@@ -89,9 +154,10 @@ const Dashboard = () => {
     setSearchText(text);
   };
 
-  const filteredScholarships = scholarships.filter((scholarship) =>
-    scholarship.title.toLowerCase().includes(searchText.toLowerCase()) ||
-    scholarship.description.toLowerCase().includes(searchText.toLowerCase())
+  const filteredScholarships = scholarships.filter(
+    (scholarship) =>
+      scholarship.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      scholarship.description.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const scrapeScholarshipWebsite = () => {
@@ -99,7 +165,7 @@ const Dashboard = () => {
 
     get(url)
       .then((response) => {
-        console.log(response)
+        console.log(response);
         const decoder = new TextDecoder();
         const text = decoder.decode(response.data);
         console.log(text);
@@ -109,7 +175,6 @@ const Dashboard = () => {
       });
 
     toggleModal();
-    
   };
 
   return (
@@ -117,7 +182,13 @@ const Dashboard = () => {
       <View style={styles.header}>
         <Text style={styles.title}>Dashboard</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-          <Icon name="bars" size={30} color="white" style={styles.profileIcon} onPress={() => navigation.navigate("ProfileMenu")} />
+          <Icon
+            name="bars"
+            size={30}
+            color="white"
+            style={styles.profileIcon}
+            onPress={() => navigation.navigate("ProfileMenu")}
+          />
         </TouchableOpacity>
       </View>
 
@@ -125,15 +196,17 @@ const Dashboard = () => {
         style={styles.searchInput}
         placeholder="Search Scholarships"
         onChangeText={searchScholarships}
-        value={searchText} 
+        value={searchText}
       />
-
 
       <FlatList
         data={filteredScholarships}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <ScholarshipCard scholarship={item} onPress={() => navigateToScholarshipDetails(item)} />
+          <ScholarshipCard
+            scholarship={item}
+            onPress={() => navigateToScholarshipDetails(item)}
+          />
         )}
       />
 
@@ -144,30 +217,30 @@ const Dashboard = () => {
       </View>
 
       <Modal animationType="slide" transparent={true} visible={isModalVisible}>
-  <View style={styles.modalContainer}>
-  <Image style={styles.logo} source={require('../../assets/logo.png')} />
-    <Text style={styles.modalTitle}>Enter Website URL to Scrape</Text>
-    <TextInput
-      style={styles.modalInput}
-      placeholder="Website URL"
-      onChangeText={(text) => setUrl(text)}
-    />
-    <View style={styles.modalButtonContainer}>
-      <TouchableOpacity
-        style={styles.modalButton1}
-        onPress={scrapeScholarshipWebsite}
-      >
-        <Text style={styles.modalButtonText2}>Scrape</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.modalButton2}
-        onPress={toggleModal}
-      >
-        <Text style={styles.modalButtonText1}>Close</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</Modal>
+        <View style={styles.modalContainer}>
+          <Image
+            style={styles.logo}
+            source={require("../../assets/logo.png")}
+          />
+          <Text style={styles.modalTitle}>Enter Website URL to Scrape</Text>
+          <TextInput
+            style={styles.modalInput}
+            placeholder="Website URL"
+            onChangeText={(text) => setUrl(text)}
+          />
+          <View style={styles.modalButtonContainer}>
+            <TouchableOpacity
+              style={styles.modalButton1}
+              onPress={scrapeScholarshipWebsite}
+            >
+              <Text style={styles.modalButtonText2}>Scrape</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton2} onPress={toggleModal}>
+              <Text style={styles.modalButtonText1}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -197,8 +270,8 @@ const styles = StyleSheet.create({
   logo: {
     width: 150,
     height: 150,
-    position: 'absolute',
-    top: '15%'
+    position: "absolute",
+    top: "15%",
   },
   searchInput: {
     backgroundColor: "white",
@@ -223,10 +296,15 @@ const styles = StyleSheet.create({
   scholarshipDescription: {
     fontSize: 40,
   },
-
   scholarshipDescription: {
     fontSize: 16,
     color: "#555",
+    marginTop: 10,
+  },
+  scholarshipTotal: {
+    fontSize: 16,
+    color: "#555",
+    fontWeight: "bold",
     marginTop: 10,
   },
   menu: {
@@ -253,7 +331,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-
   },
   modalInput: {
     backgroundColor: "#F0F0F0",
@@ -265,7 +342,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: "#F0F0F0", 
+    backgroundColor: "#F0F0F0",
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
@@ -311,12 +388,12 @@ const styles = StyleSheet.create({
   modalButtonText1: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#215D9D", 
+    color: "#215D9D",
   },
   modalButtonText2: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "white", 
+    color: "white",
   },
   modalButton1: {
     backgroundColor: "#215D9D",
