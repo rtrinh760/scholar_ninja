@@ -6,18 +6,6 @@ import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import { ScrapingBeeClient } from "scrapingbee";
 
-const scholarships1 = [
-  { id: 1, title: "Vannessa A. Gonzalez Memorial Scholarship" },
-  { id: 2, title: "Servant Ships Scholarship" },
-  { id: 3, title: "Bright Lights Scholarship" },
-];
-
-const scholarships2 = [
-  { id: 4, title: "Grand Oaks Enterprises LLC Scholarship" },
-  { id: 5, title: "Carla M. Champagne Memorial Scholarship" },
-  { id: 6, title: "Kyle Lam Hacker Scholarship" },
-];
-
 async function get(url) {
   const scrapingBeeClient = new ScrapingBeeClient(
     "W9M3DRSN277PWESEA9FG87NA7DDHAAQ3NR6RTB444C11IXY3XDK142VVOSFA8IX04SZKW51CKJT4CNRY"
@@ -67,6 +55,20 @@ const ScholarshipCard = ({ scholarship, onPress }) => (
   </Animatable.View>
 );
 
+const scholarships1 = [
+  { id: 1, title: "Vannessa A. Gonzalez Memorial Scholarship", description: "This scholarship seeks to honor the life of Vannessa A. Gonzalez by supporting students who share her passion for cosmetology." },
+  { id: 2, title: "Servant Ships Scholarship", description: "This scholarship seeks to support students who love to learn and are committed to pursuing higher education." },
+  { id: 3, title: "Bright Lights Scholarship", description: "This scholarship aims to support students who have had to overcome obstacles in order to pursue a college education. " },
+  { id: 4, title: "Eden Alaine Memorial Scholarship", description: "This scholarship seeks to support students who have lost close family members and fought to continue pursuing their goals." },
+];
+
+const scholarships2 = [
+  { id: 5, title: "Grand Oaks Enterprises LLC Scholarship", description: "This scholarship seeks to help students who need financial assistance in order to pursue their dreams of higher education." },
+  { id: 6, title: "Carla M. Champagne Memorial Scholarship", description: "This scholarship seeks to honor the memory of Carla M. Champagne by supporting students who are passionate about volunteering and need help with their college expenses. " },
+  { id: 7, title: "Kyle Lam Hacker Scholarship", description: "This scholarship seeks to honor the memory of Kyle Lam by supporting students at his alma mater who exemplify the curiosity, experimentation, and execution that Kyle lived by." },
+  { id: 8, title: "Pamela Branchini Memorial Scholarship", description: "This scholarship seeks to honor the life of Pamela Branchini by supporting students who are pursuing degrees in the fine arts." },
+];
+
 const Dashboard = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [url, setUrl] = useState("");
@@ -105,7 +107,7 @@ const Dashboard = () => {
       .catch((error) => {
         console.log(error);
       });
-      
+
     toggleModal();
     
   };
