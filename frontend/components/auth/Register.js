@@ -1,6 +1,6 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import React, { Component } from "react";
-import { View, TextInput, Button, StyleSheet, Text } from "react-native";
+import { View, TextInput, Button, StyleSheet, Text, Image } from "react-native";
 
 export class Register extends Component {
   constructor(props) {
@@ -39,8 +39,9 @@ export class Register extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Image source={require('../../assets/logo.png')} style={styles.logo} />
         <View style={styles.formContainer}>
-          <Text style={styles.title}>ScholarSheets</Text>
+          <Text style={styles.title}>Sign Up</Text>
           <TextInput
             placeholder="Name"
             style={styles.input}
@@ -56,8 +57,8 @@ export class Register extends Component {
             style={styles.input}
             onChangeText={(password) => this.setState({ password })}
           />
-          <Button title="Register" onPress={() => this.onSignup()} color="#4CAF50" />
-          <Text onPress={()=> navigation.navigate("Login")}>Already have an account?</Text>
+          <Button title="Register" onPress={() => this.onSignup()} color="#215D9D" />
+          <Text style={styles.text} onPress={()=> this.props.navigation.navigate("Login")}>Already have an account?</Text>
         </View>
       </View>
     );
@@ -65,6 +66,10 @@ export class Register extends Component {
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 150,
+    height: 150,
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -84,13 +89,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    color: '#4CAF50', 
+    color: '#215D9D', 
   },
   input: {
     height: 40,
     borderBottomWidth: 1,
-    borderBottomColor: '#4CAF50', 
+    borderBottomColor: '#215D9D', 
     marginBottom: 20,
+  },
+  text: {
+    paddingTop: 8,
+    color: 'blue'
   },
 });
 

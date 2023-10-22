@@ -18,7 +18,8 @@ const LandingPage = ({ navigation }) => {
         style={styles.animationContainer}
       >
         {/* If we had a logo, it would be great place to put it here. I am not a great graphic/logo designer  */}
-        <Text style={styles.title}>ScholarSheets</Text>
+        <Image style={styles.logo1} source={require('../../assets/logo.png')}  />
+        <Text style={styles.title}>Scholar Ninja</Text>
       </Animatable.View>
     </View>
   );
@@ -27,7 +28,7 @@ const LandingPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#4CAF50", 
+    backgroundColor: "white", 
     justifyContent: "center",
     alignItems: "center",
   },
@@ -40,8 +41,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
-    color: "white", 
+    color: "#215D9D", 
   },
+  logo1:{
+    height: '150px',
+    width: '150px',
+  }
 });
 
 export default LandingPage;

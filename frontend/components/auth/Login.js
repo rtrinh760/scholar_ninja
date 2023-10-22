@@ -36,11 +36,12 @@ export class Login extends Component {
   }
 
   render() {
+
     return (
       <View style={styles.container}>
-        
+        <Image style={styles.logo} source={require('../../assets/logo.png')} />
         <View style={styles.formContainer}>
-          <Text style={styles.title}>ScholarSheets</Text>
+          <Text style={styles.title}>Login</Text>
           <TextInput
             placeholder="Email"
             style={styles.input}
@@ -52,8 +53,8 @@ export class Login extends Component {
             onChangeText={(password) => this.setState({ password })}
             secureTextEntry
           />
-          <Button title="Login" onPress={() => this.onSignin()} color="#4CAF50" />
-          <Text onPress={()=> this.props.navigation.navigate('Register')}>Don't have an Account?</Text>
+          <Button title="Login" onPress={() => this.onSignin()} color="#215D9D" />
+          <Text style={styles.text} onPress={()=> this.props.navigation.navigate('Register')}>Don't have an Account?</Text>
         </View>
       </View>
     );
@@ -68,9 +69,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
+    width: 150,
+    height: 150,
   },
   formContainer: {
     backgroundColor: 'white',
@@ -85,13 +85,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    color: '#4CAF50', 
+    color: '#215D9D', 
   },
   input: {
     height: 40,
     borderBottomWidth: 1,
-    borderBottomColor: '#4CAF50', 
+    borderBottomColor: '#215D9D', 
     marginBottom: 20,
+  },
+  text: {
+    paddingTop: 8,
+    color: 'blue'
   },
 });
 

@@ -6,6 +6,7 @@ import Landing from './components/auth/Landing'
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import Profile from './components/Dashboard/ProfileMenu'
+import ScholarshipDetails from './components/Dashboard/ScholarshipDetails';
 
 import { getAuth } from "firebase/auth";
 // Import the functions you need from the SDKs you need
@@ -62,11 +63,12 @@ export class App extends Component {
     }
 
     render() {
-      // const { loaded, loggedin } = this.state;
-  
+      const { loaded, loggedin } = this.state;
+
+      if(loaded) {
         return (
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Dashboard">
+            <Stack.Navigator initialRouteName="Landing">
               <Stack.Screen
                 name="Landing"
                 component={Landing}
@@ -87,10 +89,27 @@ export class App extends Component {
                 component={Dashboard}
                 options={{ headerShown: false }}
               ></Stack.Screen>
+
               <Stack.Screen name='ProfileMenu' component={Profile} options={{headerShown: false}} />
+              <Stack.Screen
+                        name="ScholarshipDetails" 
+                        component={ScholarshipDetails}
+                        options={{ headerShown: false }} 
+                    ></Stack.Screen>
+
+                    
             </Stack.Navigator>
           </NavigationContainer>
         );
+      }
+
+      return (
+        <>
+          
+        </>
+      )
+  
+        
 
   }
 } 
