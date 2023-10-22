@@ -22,7 +22,11 @@ const ScholarshipDetails = () => {
             <Icon name="times" size={24} color="#215D9D" />
           </TouchableOpacity>
         </View>
+        <View style={styles.subContainer}>
         <Text style={styles.description}>{scholarship.description}</Text>
+        <Text style={styles.total}>{scholarship.total}</Text>
+        </View>
+       
       </Animatable.View>
     </View>
   );
@@ -37,12 +41,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     
   },
+  subContainer:{
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   contentContainer: {
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
     elevation: 4, 
-    height: '70%',
+    height: '30%',
     width: '90%'
   },
   header: {
@@ -61,6 +70,11 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
+  },
+  total: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 20,
   },
 });
 
